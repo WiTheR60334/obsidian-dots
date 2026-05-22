@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-
+import Qt5Compat.GraphicalEffects
 import Caelestia.Config
 import qs.components
 
@@ -88,8 +88,27 @@ Rectangle {
                 RowLayout {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 3
-                    StyledText { text: "◌"; color: "#dffaf5"; font.pointSize: Tokens.font.size.small; font.weight: Font.Medium }
-                    StyledText { text: "CPU Fan"; color: "#c6d7d4"; font.pointSize: Tokens.font.size.small; font.weight: Font.Medium }
+
+                    // Tinted fan icon (white)
+                    ColorOverlay {
+                        source: Image {
+                            source: "file:///home/wither/.config/quickshell/caelestia/components/cards//fan-blades-icon.svg"
+                            width: 16
+                            height: 16
+                            sourceSize: Qt.size(width, height)
+                            smooth: true
+                        }
+                        color: "#ffffff"
+                        width: 16
+                        height: 16
+                    }
+
+                    StyledText {
+                        text: " CPU Fan"
+                        color: "#c6d7d4"
+                        font.pointSize: Tokens.font.size.small
+                        font.weight: Font.Medium
+                    }
                 }
 
                 Item {
@@ -127,7 +146,7 @@ Rectangle {
                     Item {
                         anchors.centerIn: parent
                         width: 60
-                        height: 52   // increased from 48 to accommodate top padding
+                        height: 52
 
                         Column {
                             anchors.centerIn: parent
@@ -140,7 +159,7 @@ Rectangle {
                                 font.weight: Font.DemiBold
                                 horizontalAlignment: Text.AlignHCenter
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                topPadding: 8   // adds space above the number
+                                topPadding: 8
                             }
                             StyledText {
                                 text: "RPM"
@@ -152,7 +171,6 @@ Rectangle {
                             }
                         }
                     }
-
                 }
             }
 
@@ -175,8 +193,27 @@ Rectangle {
                 RowLayout {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 3
-                    StyledText { text: "◌"; color: "#dffaf5"; font.pointSize: Tokens.font.size.small; font.weight: Font.Medium }
-                    StyledText { text: "GPU Fan"; color: "#c6d7d4"; font.pointSize: Tokens.font.size.small; font.weight: Font.Medium }
+
+                    // Tinted fan icon (white)
+                    ColorOverlay {
+                        source: Image {
+                            source: "file:///home/wither/.config/quickshell/caelestia/components/cards//fan-blades-icon.svg"
+                            width: 16
+                            height: 16
+                            sourceSize: Qt.size(width, height)
+                            smooth: true
+                        }
+                        color: "#ffffff"
+                        width: 16
+                        height: 16
+                    }
+
+                    StyledText {
+                        text: " GPU Fan"
+                        color: "#c6d7d4"
+                        font.pointSize: Tokens.font.size.small
+                        font.weight: Font.Medium
+                    }
                 }
 
                 Item {
@@ -214,20 +251,20 @@ Rectangle {
                     Item {
                         anchors.centerIn: parent
                         width: 60
-                        height: 52   // increased from 48 to accommodate top padding
+                        height: 52
 
                         Column {
                             anchors.centerIn: parent
                             spacing: 2
 
                             StyledText {
-                                text: root.cpuFan
+                                text: root.gpuFan   // FIXED: was root.cpuFan
                                 color: "white"
                                 font.pointSize: Tokens.font.size.normal
                                 font.weight: Font.DemiBold
                                 horizontalAlignment: Text.AlignHCenter
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                topPadding: 8   // adds space above the number
+                                topPadding: 8
                             }
                             StyledText {
                                 text: "RPM"
@@ -239,7 +276,6 @@ Rectangle {
                             }
                         }
                     }
-
                 }
             }
 
