@@ -1,0 +1,4 @@
+*.log
+.cache/
+pycache/
+.DS_Store
