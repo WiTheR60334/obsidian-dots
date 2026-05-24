@@ -470,7 +470,7 @@
         "commands": {
             "hibernate": [
                 "systemctl",
-                "hibernate"
+                "suspend"
             ],
             "logout": [
                 "loginctl",
@@ -489,7 +489,7 @@
         "dragThreshold": 30,
         "enabled": true,
         "icons": {
-            "hibernate": "downloading",
+            "hibernate": "bedtime",
             "logout": "logout",
             "reboot": "cached",
             "shutdown": "power_settings_new"
