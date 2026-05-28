@@ -36,6 +36,62 @@ CollapsibleSection {
         }
     }
 
+    SectionContainer {
+        contentSpacing: Tokens.spacing.small
+
+        StyledText {
+            text: qsTr("Wallpaper Transition")
+            font.pointSize: Tokens.font.size.larger
+            font.weight: 500
+        }
+
+        SplitButtonRow {
+            id: transitionPicker
+
+            label: qsTr("Animation")
+
+            menuItems: [
+                MenuItem {
+                    property string val: "fade"
+                    text: qsTr("Fade")
+                    icon: "blur_on"
+                },
+                MenuItem {
+                    property string val: "zoom"
+                    text: qsTr("Zoom")
+                    icon: "search"
+                },
+                MenuItem {
+                    property string val: "slide"
+                    text: qsTr("Slide")
+                    icon: "arrow_forward"
+                },
+                MenuItem {
+                    property string val: "rise"
+                    text: qsTr("Rise")
+                    icon: "arrow_upward"
+                },
+                MenuItem {
+                    property string val: "spin"
+                    text: qsTr("Spin")
+                    icon: "rotate_left"
+                }
+            ]
+
+            Component.onCompleted: {
+                for (let i = 0; i < menuItems.length; i++) {
+                    if (menuItems[i].val === rootPane.wallpaperTransition)
+                        active = menuItems[i];
+                }
+            }
+
+            onSelected: item => {
+                rootPane.wallpaperTransition = item.val;
+                rootPane.saveConfig();
+            }
+        }
+    }
+
     StyledText {
         Layout.topMargin: Tokens.spacing.normal
         text: qsTr("Desktop Clock")

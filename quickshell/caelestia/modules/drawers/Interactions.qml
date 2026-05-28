@@ -102,12 +102,12 @@ CustomMouseArea {
             return;
         }
 
-        // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && Config.bar.showOnHover && x < bar.clampedWidth)
+        // Show bar in non-exclusive mode on hover — blocked in zen mode
+        if (!visibilities.zenMode && !visibilities.bar && Config.bar.showOnHover && x < bar.clampedWidth)
             bar.isHovered = true;
 
-        // Show/hide bar on drag
-        if (pressed && dragStart.x < bar.clampedWidth) {
+        // Show/hide bar on drag — blocked in zen mode
+        if (!visibilities.zenMode && pressed && dragStart.x < bar.clampedWidth) {
             if (dragX > Config.bar.dragThreshold)
                 visibilities.bar = true;
             else if (dragX < -Config.bar.dragThreshold)
@@ -115,20 +115,20 @@ CustomMouseArea {
         }
 
         if (panels.sidebar.offsetScale === 1) {
-            // Show osd on hover
-            const showOsd = inRightPanel(panels.osdWrapper, x, y);
+            // Show osd on hover — blocked in zen mode
+            const showOsd = !visibilities.zenMode && inRightPanel(panels.osdWrapper, x, y);
 
             // Always update visibility based on hover if not in shortcut mode
             if (!osdShortcutActive) {
                 visibilities.osd = showOsd;
                 root.panels.osd.hovered = showOsd;
             } else if (showOsd) {
-                // If hovering over OSD area while in shortcut mode, transition to hover control
                 osdShortcutActive = false;
                 root.panels.osd.hovered = true;
             }
 
-            const showSidebar = pressed && dragStart.x > Math.min(width - Config.border.minThickness, bar.implicitWidth + panels.sidebar.x);
+            // Sidebar drag — blocked in zen mode
+            const showSidebar = !visibilities.zenMode && pressed && dragStart.x > Math.min(width - Config.border.minThickness, bar.implicitWidth + panels.sidebar.x);
 
             // Show/hide session on drag
             if (pressed && inRightPanel(panels.sessionWrapper, dragStart.x, dragStart.y) && withinPanelHeight(panels.sessionWrapper, x, y)) {
@@ -137,24 +137,20 @@ CustomMouseArea {
                 else if (dragX > Config.session.dragThreshold)
                     visibilities.session = false;
 
-                // Show sidebar on drag if in session area and session is nearly fully visible
                 if (showSidebar && panels.session.offsetScale <= 0 && dragX < -Config.sidebar.dragThreshold)
                     visibilities.sidebar = true;
             } else if (showSidebar && dragX < -Config.sidebar.dragThreshold) {
-                // Show sidebar on drag if not in session area
                 visibilities.sidebar = true;
             }
         } else {
             const outOfSidebar = x < width - panels.sidebar.width * (1 - panels.sidebar.offsetScale);
-            // Show osd on hover
-            const showOsd = outOfSidebar && inRightPanel(panels.osdWrapper, x, y);
+            // Show osd on hover — blocked in zen mode
+            const showOsd = !visibilities.zenMode && outOfSidebar && inRightPanel(panels.osdWrapper, x, y);
 
-            // Always update visibility based on hover if not in shortcut mode
             if (!osdShortcutActive) {
                 visibilities.osd = showOsd;
                 root.panels.osd.hovered = showOsd;
             } else if (showOsd) {
-                // If hovering over OSD area while in shortcut mode, transition to hover control
                 osdShortcutActive = false;
                 root.panels.osd.hovered = true;
             }
@@ -183,14 +179,12 @@ CustomMouseArea {
                 visibilities.launcher = false;
         }
 
-        // Show dashboard on hover
-        const showDashboard = Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y);
+        // Show dashboard on hover — blocked in zen mode
+        const showDashboard = !visibilities.zenMode && Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y);
 
-        // Always update visibility based on hover if not in shortcut mode
         if (!dashboardShortcutActive) {
             visibilities.dashboard = showDashboard;
         } else if (showDashboard) {
-            // If hovering over dashboard area while in shortcut mode, transition to hover control
             dashboardShortcutActive = false;
         }
 
@@ -202,14 +196,12 @@ CustomMouseArea {
                 visibilities.dashboard = false;
         }
 
-        // Show utilities on hover
-        const showUtilities = inBottomPanel(panels.utilities, x, y, true);
+        // Show utilities on hover — blocked in zen mode
+        const showUtilities = !visibilities.zenMode && inBottomPanel(panels.utilities, x, y, true);
 
-        // Always update visibility based on hover if not in shortcut mode
         if (!utilitiesShortcutActive) {
             visibilities.utilities = showUtilities;
         } else if (showUtilities) {
-            // If hovering over utilities area while in shortcut mode, transition to hover control
             utilitiesShortcutActive = false;
         }
 
@@ -225,13 +217,11 @@ CustomMouseArea {
     // Monitor individual visibility changes
     Connections {
         function onLauncherChanged() {
-            // If launcher is hidden, clear shortcut flags for dashboard and OSD
             if (!root.visibilities.launcher) {
                 root.dashboardShortcutActive = false;
                 root.osdShortcutActive = false;
                 root.utilitiesShortcutActive = false;
 
-                // Also hide dashboard and OSD if they're not being hovered
                 const inDashboardArea = root.inTopPanel(root.panels.dashboard, root.mouseX, root.mouseY);
                 const inOsdArea = root.inRightPanel(root.panels.osdWrapper, root.mouseX, root.mouseY);
 
@@ -247,40 +237,48 @@ CustomMouseArea {
 
         function onDashboardChanged() {
             if (root.visibilities.dashboard) {
-                // Dashboard became visible, immediately check if this should be shortcut mode
                 const inDashboardArea = root.inTopPanel(root.panels.dashboard, root.mouseX, root.mouseY);
                 if (!inDashboardArea) {
                     root.dashboardShortcutActive = true;
                 }
             } else {
-                // Dashboard hidden, clear shortcut flag
                 root.dashboardShortcutActive = false;
             }
         }
 
         function onOsdChanged() {
             if (root.visibilities.osd) {
-                // OSD became visible, immediately check if this should be shortcut mode
                 const inOsdArea = root.inRightPanel(root.panels.osdWrapper, root.mouseX, root.mouseY);
                 if (!inOsdArea) {
                     root.osdShortcutActive = true;
                 }
             } else {
-                // OSD hidden, clear shortcut flag
                 root.osdShortcutActive = false;
             }
         }
 
         function onUtilitiesChanged() {
             if (root.visibilities.utilities) {
-                // Utilities became visible, immediately check if this should be shortcut mode
                 const inUtilitiesArea = root.inBottomPanel(root.panels.utilities, root.mouseX, root.mouseY);
                 if (!inUtilitiesArea) {
                     root.utilitiesShortcutActive = true;
                 }
             } else {
-                // Utilities hidden, clear shortcut flag
                 root.utilitiesShortcutActive = false;
+            }
+        }
+
+        // When zen mode activates, immediately collapse all affected panels
+        function onZenModeChanged() {
+            if (root.visibilities.zenMode) {
+                root.visibilities.bar       = false;
+                root.visibilities.sidebar   = false;
+                root.visibilities.dashboard = false;
+                root.visibilities.utilities = false;
+                root.visibilities.osd       = false;
+                root.dashboardShortcutActive = false;
+                root.osdShortcutActive       = false;
+                root.utilitiesShortcutActive  = false;
             }
         }
 

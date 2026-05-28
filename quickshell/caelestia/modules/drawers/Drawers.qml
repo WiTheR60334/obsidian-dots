@@ -22,5 +22,10 @@ Variants {
 
             screen: scope.modelData
         }
+
+        WallpaperPickerWindow {
+            screen: scope.modelData
+            visibilities: content.visibilities
+        }
     }
 }

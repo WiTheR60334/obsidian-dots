@@ -10,7 +10,8 @@ Item {
     required property DrawerVisibilities visibilities
     readonly property Props props: Props {}
 
-    readonly property bool shouldBeActive: visibilities.sidebar && Config.sidebar.enabled
+    // Zen mode (Super+H) overrides sidebar visibility entirely
+    readonly property bool shouldBeActive: visibilities.sidebar && Config.sidebar.enabled && !visibilities.zenMode
     property real offsetScale: shouldBeActive ? 0 : 1
 
     visible: offsetScale < 1

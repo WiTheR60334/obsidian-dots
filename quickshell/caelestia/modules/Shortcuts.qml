@@ -108,6 +108,39 @@ Scope {
         }
     }
 
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "wallpaperPicker"
+        description: "Toggle wallpaper picker"
+        onPressed: {
+            if (root.hasFullscreen)
+                return;
+            const visibilities = Visibilities.getForActive();
+            visibilities.wallpaperPicker = !visibilities.wallpaperPicker;
+        }
+    }
+
+    // ── Zen Mode: Super+H hides sidebar/dashboard/osd/utilities and disables their hover ──
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "zenMode"
+        description: "Toggle zen mode (hide and disable hover for sidebar, dashboard, utilities, osd)"
+        onPressed: {
+            const v = Visibilities.getForActive();
+            v.zenMode = !v.zenMode;
+            if (v.zenMode) {
+                // Immediately collapse all affected panels
+                v.bar       = false;
+                v.sidebar    = false;
+                v.dashboard  = false;
+                v.utilities  = false;
+                v.osd        = false;
+            }
+        }
+    }
+
     IpcHandler {
         function toggle(drawer: string): void {
             if (list().split("\n").includes(drawer)) {

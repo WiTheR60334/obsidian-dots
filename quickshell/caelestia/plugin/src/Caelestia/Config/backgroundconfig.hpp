@@ -71,6 +71,9 @@ class BackgroundConfig : public ConfigObject {
 
     CONFIG_PROPERTY(bool, enabled, true)
     CONFIG_PROPERTY(bool, wallpaperEnabled, true)
+    // Wallpaper change animation type.
+    // Valid values: "fade", "zoom", "slide", "rise", "spin"
+    CONFIG_PROPERTY(QString, wallpaperTransition, QStringLiteral("zoom"))
     CONFIG_SUBOBJECT(DesktopClock, desktopClock)
     CONFIG_SUBOBJECT(BackgroundVisualiser, visualiser)
 

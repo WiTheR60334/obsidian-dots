@@ -239,6 +239,18 @@ StyledWindow {
         Component.onCompleted: Visibilities.load(root.screen, this)
     }
 
+    readonly property alias visibilities: visibilities
+
+    // Zen mode (Super+H): declaratively locks sidebar=false while active.
+    // This overrides all other attempts to show the sidebar until zenMode is toggled off.
+    Binding {
+        target: visibilities
+        property: "sidebar"
+        value: false
+        when: visibilities.zenMode
+        restoreMode: Binding.RestoreValue
+    }
+
     Interactions {
         id: interactions
 
