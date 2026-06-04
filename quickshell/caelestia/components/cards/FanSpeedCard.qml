@@ -5,6 +5,7 @@ import Quickshell.Io
 import Qt5Compat.GraphicalEffects
 import Caelestia.Config
 import qs.components
+import qs.services
 
 Rectangle {
     id: root
@@ -12,11 +13,24 @@ Rectangle {
     width: 120
     height: 300
     radius: Tokens.rounding.large
-    color: "#162322"
+    color: Colours.tPalette.m3surfaceContainer
 
     property int cpuFan: 0
     property int gpuFan: 0
     property int maxRpm: 6000
+
+    // Expose palette colors as properties so Canvas.onPaint can read them
+    // and so we can watch them for changes to trigger a repaint
+    readonly property color gaugeTrackColor: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+    readonly property color gaugeQuietColor: Colours.palette.m3success
+    readonly property color gaugeNormalColor: Colours.palette.m3tertiary
+    readonly property color gaugeTurboColor: Colours.palette.m3error
+
+    // Repaint canvases whenever palette colors change
+    onGaugeTrackColorChanged: { cpuGauge.requestPaint(); gpuGauge.requestPaint() }
+    onGaugeQuietColorChanged: { cpuGauge.requestPaint(); gpuGauge.requestPaint() }
+    onGaugeNormalColorChanged: { cpuGauge.requestPaint(); gpuGauge.requestPaint() }
+    onGaugeTurboColorChanged: { cpuGauge.requestPaint(); gpuGauge.requestPaint() }
 
     Process {
         id: fanProcess
@@ -47,9 +61,9 @@ Rectangle {
 
     function gaugeColor(value) {
         const percent = value / maxRpm
-        if (percent < 0.4) return "#7ce0c3"
-        if (percent < 0.7) return "#f2d06b"
-        return "#ff7b7b"
+        if (percent < 0.4) return root.gaugeQuietColor
+        if (percent < 0.7) return root.gaugeNormalColor
+        return root.gaugeTurboColor
     }
 
     // Outer item to vertically center the whole content block
@@ -73,7 +87,7 @@ Rectangle {
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 text: "Fan Speed"
-                color: "#dfeceb"
+                color: Colours.palette.m3onSurface
                 font.pointSize: Tokens.font.size.normal
                 font.weight: Font.DemiBold
             }
@@ -89,7 +103,6 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 3
 
-                    // Tinted fan icon (white)
                     ColorOverlay {
                         source: Image {
                             source: "file:///home/wither/.config/quickshell/caelestia/components/cards//fan-blades-icon.svg"
@@ -98,14 +111,14 @@ Rectangle {
                             sourceSize: Qt.size(width, height)
                             smooth: true
                         }
-                        color: "#ffffff"
+                        color: Colours.palette.m3onSurface
                         width: 16
                         height: 16
                     }
 
                     StyledText {
                         text: " CPU Fan"
-                        color: "#c6d7d4"
+                        color: Colours.palette.m3onSurfaceVariant
                         font.pointSize: Tokens.font.size.small
                         font.weight: Font.Medium
                     }
@@ -129,7 +142,7 @@ Rectangle {
 
                             ctx.beginPath()
                             ctx.lineWidth = 8
-                            ctx.strokeStyle = "#233533"
+                            ctx.strokeStyle = root.gaugeTrackColor
                             ctx.arc(centerX, centerY, radius, Math.PI * 0.75, Math.PI * 2.25)
                             ctx.stroke()
 
@@ -154,7 +167,7 @@ Rectangle {
 
                             StyledText {
                                 text: root.cpuFan
-                                color: "white"
+                                color: Colours.palette.m3onSurface
                                 font.pointSize: Tokens.font.size.normal
                                 font.weight: Font.DemiBold
                                 horizontalAlignment: Text.AlignHCenter
@@ -163,7 +176,7 @@ Rectangle {
                             }
                             StyledText {
                                 text: "RPM"
-                                color: "#70817e"
+                                color: Colours.palette.m3onSurfaceVariant
                                 font.pointSize: Tokens.font.size.smaller - 1
                                 font.weight: Font.Medium
                                 horizontalAlignment: Text.AlignHCenter
@@ -181,7 +194,7 @@ Rectangle {
                 Layout.bottomMargin: 2
                 height: 1
                 radius: 999
-                color: "#324240"
+                color: Colours.palette.m3outlineVariant
                 opacity: 0.35
             }
 
@@ -194,7 +207,6 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 3
 
-                    // Tinted fan icon (white)
                     ColorOverlay {
                         source: Image {
                             source: "file:///home/wither/.config/quickshell/caelestia/components/cards//fan-blades-icon.svg"
@@ -203,14 +215,14 @@ Rectangle {
                             sourceSize: Qt.size(width, height)
                             smooth: true
                         }
-                        color: "#ffffff"
+                        color: Colours.palette.m3onSurface
                         width: 16
                         height: 16
                     }
 
                     StyledText {
                         text: " GPU Fan"
-                        color: "#c6d7d4"
+                        color: Colours.palette.m3onSurfaceVariant
                         font.pointSize: Tokens.font.size.small
                         font.weight: Font.Medium
                     }
@@ -234,7 +246,7 @@ Rectangle {
 
                             ctx.beginPath()
                             ctx.lineWidth = 8
-                            ctx.strokeStyle = "#233533"
+                            ctx.strokeStyle = root.gaugeTrackColor
                             ctx.arc(centerX, centerY, radius, Math.PI * 0.75, Math.PI * 2.25)
                             ctx.stroke()
 
@@ -258,8 +270,8 @@ Rectangle {
                             spacing: 2
 
                             StyledText {
-                                text: root.gpuFan   // FIXED: was root.cpuFan
-                                color: "white"
+                                text: root.gpuFan
+                                color: Colours.palette.m3onSurface
                                 font.pointSize: Tokens.font.size.normal
                                 font.weight: Font.DemiBold
                                 horizontalAlignment: Text.AlignHCenter
@@ -268,7 +280,7 @@ Rectangle {
                             }
                             StyledText {
                                 text: "RPM"
-                                color: "#70817e"
+                                color: Colours.palette.m3onSurfaceVariant
                                 font.pointSize: Tokens.font.size.smaller - 1
                                 font.weight: Font.Medium
                                 horizontalAlignment: Text.AlignHCenter
@@ -285,7 +297,7 @@ Rectangle {
                 Layout.topMargin: 10
                 readonly property int avgFan: (root.cpuFan + root.gpuFan) / 2
                 text: avgFan > 3500 ? "Turbo" : (avgFan > 2000 ? "Normal" : "Quiet")
-                color: avgFan > 3500 ? "#ff7b7b" : (avgFan > 2000 ? "#f2d06b" : "#7ce0c3")
+                color: avgFan > 3500 ? Colours.palette.m3error : (avgFan > 2000 ? Colours.palette.m3tertiary : Colours.palette.m3success)
                 font.pointSize: Tokens.font.size.Medium
                 font.weight: Font.DemiBold
                 opacity: 0.95
