@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="YOUR_GOOGLE_DRIVE_DEMO_LINK">
+  <a href="https://drive.google.com/file/d/1Dkxp99A5qGVc-XsV0gYNUfT3ySAIVME8/view?usp=sharing">
     <img src="https://img.shields.io/badge/Demo-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Demo" />
   </a>
   <img src="https://img.shields.io/badge/OS-Arch%20Linux-1793D1?style=for-the-badge&logo=archlinux&logoColor=white" alt="Arch Linux" />
@@ -21,6 +21,11 @@
 ## Overview
 
 This is my personal dotfiles and configuration for a polished, functional Arch Linux desktop using Hyprland as the window manager and the [caelestia-shell](https://github.com/caelestia-dots/shell) as the UI framework (built on Quickshell/QML). The base was installed from upstream, but everything has been customised to match my taste, workflow, and hardware.
+
+---
+## Demo
+
+▶️ [Watch Demo Video](https://drive.google.com/file/d/1Dkxp99A5qGVc-XsV0gYNUfT3ySAIVME8/view?usp=sharing)
 
 ---
 ## Screenshots
