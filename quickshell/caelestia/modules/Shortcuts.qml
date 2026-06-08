@@ -166,6 +166,14 @@ Scope {
             WindowFactory.create();
         }
 
+        function openPane(pane: string): void {
+            WindowFactory.create(null, { active: pane });
+        }
+
+        function closeAll(): void {
+            WindowFactory.close();
+        }
+
         target: "controlCenter"
     }
 

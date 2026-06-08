@@ -8,8 +8,28 @@ import qs.services
 Singleton {
     id: root
 
+    // Track the single live instance
+    property var activeWindow: null
+
     function create(parent: Item, props: var): void {
-        controlCenter.createObject(parent ?? dummy, props);
+        if (root.activeWindow !== null) {
+            root.activeWindow.destroy();
+            root.activeWindow = null;
+            return;
+        }
+        const win = controlCenter.createObject(parent ?? dummy, props);
+        root.activeWindow = win;
+    }
+
+    function toggle(parent: Item, props: var): void {
+        create(parent, props);
+    }
+
+    function close(): void {
+        if (root.activeWindow !== null) {
+            root.activeWindow.destroy();
+            root.activeWindow = null;
+        }
     }
 
     QtObject {
@@ -28,8 +48,15 @@ Singleton {
             color: Colours.tPalette.m3surface
 
             onVisibleChanged: {
-                if (!visible)
+                if (!visible) {
+                    root.activeWindow = null;
                     destroy();
+                }
+            }
+
+            Component.onDestruction: {
+                if (root.activeWindow === win)
+                    root.activeWindow = null;
             }
 
             implicitWidth: cc.implicitWidth
@@ -41,6 +68,12 @@ Singleton {
             maximumSize.height: implicitHeight
 
             title: qsTr("Caelestia Settings - %1").arg(cc.active.slice(0, 1).toUpperCase() + cc.active.slice(1))
+
+            // Close on Escape
+            Shortcut {
+                sequence: "Escape"
+                onActivated: win.destroy()
+            }
 
             ControlCenter {
                 id: cc

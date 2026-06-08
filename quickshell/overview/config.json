@@ -44,9 +44,9 @@
   "overview": {
     "rows": 2,
     "columns": 5,
-    "scale": 0.16,
+    "scale": 0.17,
     "enable": true,
-    "hideEmptyRows": true,
+    "hideEmptyRows": false,
     "closeOnFocusLoss": true,
     "useWorkspaceMap": false,
     "workspaceMap": [0, 10],
@@ -68,7 +68,7 @@
       "workspaceOpacity": 0.86,
       "emptyWorkspaceWallpaperOverlayOpacity": 0.18,
       "windowOverlayOpacity": 0.22,
-      "enableBlur": false,
+      "enableBlur": true,
       "glassMode": false,
       "glassTintStrength": 0.35,
       "glassBorderOpacity": 0.72,
@@ -79,7 +79,7 @@
     "workspaceNumberBaseSize": 250
   },
   "position": {
-    "topMargin": 200
+    "topMargin": 350
   },
   "windowPreview": {
     "showIcons": true,
