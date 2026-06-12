@@ -248,12 +248,6 @@ For AUR packages:
 yay -Syu --ignore hyprland,caelestia-shell,quickshell-git
 ```
 
-or:
-
-```bash
-yay -Syu --ignore caelestia-shell,quickshell-git
-```
-
 ---
 
 ## Updating
