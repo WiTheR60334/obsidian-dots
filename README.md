@@ -57,62 +57,195 @@ This is my personal dotfiles and configuration for a polished, functional Arch L
 
 ## Installation
 
-> This is a **personal configuration**, not a general-purpose installer. These steps are for reference or if you want to replicate my setup.
+> This setup is known to work with the exact versions listed below. Newer versions of Hyprland, QuickShell, or Caelestia Shell may introduce breaking changes.
 
-### 1. Install caelestia-shell (Arch)
+### Working Versions
 
-```sh
-# Stable AUR package
-yay -S caelestia-shell
+| Component       | Version                                                   |
+| --------------- | --------------------------------------------------------- |
+| Hyprland        | 0.55.3-1                                                  |
+| QuickShell      | 0.3.0 (revision d99d87d5e5ec4e696815348692fdaaf0b6be1b2c) |
+| Caelestia Shell | 1.6.2-2                                                   |
 
-# Or bleeding-edge
-yay -S caelestia-shell-git
+---
+
+### Install Hyprland 0.55.3-1
+
+Check cache first:
+
+```bash
+ls /var/cache/pacman/pkg/hyprland*
 ```
 
-For manual installation with local edits (recommended for customisation):
+If available:
 
-```sh
-mkdir -p ~/.config/quickshell/caelestia
-cmake -B build -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_INSTALL_PREFIX=/ \
-  -DINSTALL_QSCONFDIR=~/.config/quickshell/caelestia
-cmake --build build
-sudo cmake --install build
-sudo chown -R $USER ~/.config/quickshell/caelestia
+```bash
+sudo pacman -U /var/cache/pacman/pkg/hyprland-0.55.3-1-*.pkg.tar.zst
 ```
 
-### 2. Install dependencies
+Otherwise use Arch Archive:
 
-```sh
-yay -S caelestia-cli quickshell-git ddcutil brightnessctl app2unit \
-       libcava networkmanager lm-sensors fish aubio libpipewire \
-       qt6-declarative qt6-base swappy libqalculate \
-       ttf-rubik-vf material-symbols-rounded-git \
-       caskaydia-cove-nerd-font
+```bash
+sudo pacman -U https://archive.archlinux.org/packages/h/hyprland/hyprland-0.55.3-1-x86_64.pkg.tar.zst
 ```
 
-### 3. Copy my config
+Verify:
 
-```sh
-cp shell.json ~/.config/caelestia/shell.json
-mkdir -p ~/.config/caelestia/monitors/eDP-1
-cp monitors/eDP-1/shell.json ~/.config/caelestia/monitors/eDP-1/shell.json
+```bash
+pacman -Qi hyprland | grep Version
 ```
 
-### 4. Add custom components
+Expected:
 
-```sh
-cp -r components/cards/FanSpeedCard.qml ~/.config/quickshell/caelestia/components/cards/
-cp -r components/cards/fan-blades-icon.svg ~/.config/quickshell/caelestia/components/cards/
+```text
+Version : 0.55.3-1
 ```
 
-### 5. Autostart with Hyprland
+---
 
-Add to your `hyprland.conf`:
+### Install QuickShell 0.3.0
+
+Remove existing package:
+
+```bash
+yay -R quickshell-git
+```
+
+Clone AUR repository:
+
+```bash
+git clone https://aur.archlinux.org/quickshell-git.git
+cd quickshell-git
+```
+
+Checkout exact revision:
+
+```bash
+git checkout d99d87d5e5ec4e696815348692fdaaf0b6be1b2c
+```
+
+Build:
+
+```bash
+makepkg -si
+```
+
+Verify:
+
+```bash
+qs --version
+```
+
+Expected:
+
+```text
+Quickshell 0.3.0
+revision d99d87d5e5ec4e696815348692fdaaf0b6be1b2c
+```
+
+---
+
+### Install Caelestia Shell 1.6.2-2
+
+Clone AUR package:
+
+```bash
+git clone https://aur.archlinux.org/caelestia-shell.git ~/.config/quickshell/caelestia
+cd caelestia
+```
+
+Checkout the last 1.6.2 release commit:
+
+```bash
+git checkout 8e46b3c66ee700c451641450d1c8f9112174ef9e
+```
+
+Verify:
+
+```bash
+grep pkgver PKGBUILD
+```
+
+Expected:
+
+```text
+pkgver=1.6.2
+```
+
+Build:
+
+```bash
+makepkg -si
+```
+
+Verify:
+
+```bash
+pacman -Qi caelestia-shell | grep Version
+```
+
+Expected:
+
+```text
+Version : 1.6.2-2
+```
+
+---
+
+### Clone My Configuration
+
+Clone the repository:
+
+```bash
+git clone https://github.com/WiTheR60334/obsidian-dots.git ~/obsidian-dots
+```
+
+Remove existing configurations:
+
+```bash
+rm -rf ~/.config/hypr
+rm -rf ~/.config/kitty
+rm -rf ~/.config/quickshell
+rm -rf ~/.config/fuzzel
+rm -rf ~/.config/caelestia
+```
+
+Copy the configurations from this repository:
+
+```bash
+cp -r ~/obsidian-dots/hypr ~/.config/
+cp -r ~/obsidian-dots/kitty ~/.config/
+cp -r ~/obsidian-dots/quickshell ~/.config/
+cp -r ~/obsidian-dots/fuzzel ~/.config/
+cp -r ~/obsidian-dots/caelestia ~/.config/
+
+cp ~/obsidian-dots/chrome-flags.conf ~/.config/
+```
+
+## Prevent Accidental Upgrades
+
+Edit:
+
+```bash
+sudo nano /etc/pacman.conf
+```
+
+Add:
 
 ```ini
-exec-once = caelestia shell -d
+IgnorePkg = hyprland caelestia-shell
+```
+
+For AUR packages:
+
+```bash
+yay -Syu --ignore caelestia-shell
+```
+
+or:
+
+```bash
+yay -Syu --ignore caelestia-shell,quickshell-git
 ```
 
 ---
@@ -128,26 +261,6 @@ cd ~/.config/quickshell/caelestia
 git pull
 cmake --build build
 sudo cmake --install build
-```
-
-> ⚠️ After updating, re-apply the `FanSpeedCard.qml` component if the `components/cards/` directory is overwritten.
-
----
-
-## Keybinds
-
-All shell keybinds use Hyprland [global shortcuts](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts). Refer to the [caelestia keybinds reference](https://github.com/caelestia-dots/caelestia/blob/main/hypr/hyprland/keybinds.conf) for the full list. IPC commands are accessible via:
-
-```sh
-caelestia shell <command>
-```
-
-For example:
-
-```sh
-caelestia shell controlCenter open
-caelestia wallpaper -r     # random wallpaper
-caelestia wallpaper -h     # wallpaper help
 ```
 
 ---
