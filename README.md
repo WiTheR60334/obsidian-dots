@@ -25,9 +25,15 @@ This is my personal dotfiles and configuration for a polished, functional Arch L
 ---
 ## Demo
 
-▶️ [Watch Demo Video](https://drive.google.com/file/d/1Dkxp99A5qGVc-XsV0gYNUfT3ySAIVME8/view?usp=sharing)
+<p align="center">
+  <a href="https://drive.google.com/file/d/1Dkxp99A5qGVc-XsV0gYNUfT3ySAIVME8/view?usp=sharing">
+ <img width="900" alt="Thumbnail" src="https://github.com/user-attachments/assets/266c871b-fe31-42eb-b0da-be821fb8cd42" />
+
+  </a>
+</p>
 
 ---
+
 ## Screenshots
 
 <img width="1920" height="1200" alt="2026-06-07_11-35-22" src="https://github.com/user-attachments/assets/777c5bcf-81b8-4c75-9c08-bf3dd4c97d88" />
