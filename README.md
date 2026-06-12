@@ -245,7 +245,7 @@ IgnorePkg = hyprland caelestia-shell
 For AUR packages:
 
 ```bash
-yay -Syu --ignore caelestia-shell
+yay -Syu --ignore hyprland,caelestia-shell,quickshell-git
 ```
 
 or:
