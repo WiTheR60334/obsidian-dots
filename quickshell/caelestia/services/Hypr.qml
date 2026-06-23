@@ -26,7 +26,7 @@ Singleton {
 
     readonly property HyprKeyboard keyboard: extras.devices.keyboards.find(kb => kb.main) ?? null
     readonly property bool capsLock: keyboard?.capsLock ?? false
-    readonly property bool numLock: keyboard?.numLock ?? false
+    readonly property bool numLock: !(keyboard?.numLock ?? false)
     readonly property string defaultKbLayout: keyboard?.layout.split(",")[0] ?? "??"
     readonly property string kbLayoutFull: keyboard?.activeKeymap ?? "Unknown"
     readonly property string kbLayout: kbMap.get(kbLayoutFull) ?? "??"

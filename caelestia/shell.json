@@ -466,7 +466,7 @@
         "brightnessIncrement": 0.1,
         "defaultPlayer": "Spotify",
         "gpuType": "",
-        "maxVolume": 1,
+        "maxVolume": 1.5,
         "playerAliases": [
             {
                 "from": "com.github.th_ch.youtube_music",
